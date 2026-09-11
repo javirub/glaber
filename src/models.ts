@@ -111,3 +111,24 @@ export interface ImportResult {
 export type ImportPreset = "unprotected" | "protected" | "protected_masked";
 
 export type View = "actions" | "instances" | "projects" | "registry-upload" | "env-vars";
+
+export type EnvVarInputMode = "manual" | "file" | "base64";
+
+export type EnvVarType = "env_var" | "file";
+
+/** What the Rust `read_file_base64` command returns. */
+export interface FileBase64 {
+  file_name: string;
+  byte_size: number;
+  base64: string;
+}
+
+/** A variable built from a Base64-encoded file, before it becomes a table row. */
+export interface Base64RowDraft {
+  key: string;
+  value: string;
+  variable_type: EnvVarType;
+  protected: boolean;
+  masked: boolean;
+  description: string;
+}

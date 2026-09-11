@@ -6,18 +6,20 @@ import "./ImportOptionsDialog.css";
 
 interface ImportOptionsDialogProps {
   count: number;
+  /** Scope to preselect, usually the one the table is currently filtered to. */
+  defaultScope?: string;
   onSelect: (preset: ImportPreset, environmentScope: string) => void;
   onCancel: () => void;
 }
 
 type ScopeMode = "all" | "specific";
 
-export function ImportOptionsDialog({ count, onSelect, onCancel }: ImportOptionsDialogProps) {
+export function ImportOptionsDialog({ count, defaultScope = "*", onSelect, onCancel }: ImportOptionsDialogProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2>(1);
   const [preset, setPreset] = useState<ImportPreset | null>(null);
-  const [scopeMode, setScopeMode] = useState<ScopeMode>("all");
-  const [specificScope, setSpecificScope] = useState("");
+  const [scopeMode, setScopeMode] = useState<ScopeMode>(defaultScope === "*" ? "all" : "specific");
+  const [specificScope, setSpecificScope] = useState(defaultScope === "*" ? "" : defaultScope);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {

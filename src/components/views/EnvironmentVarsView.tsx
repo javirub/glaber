@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { KeyRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { GitLabInstance, GitLabProject, ImportPreset, ImportProtection } from "../../models";
+import type { Base64RowDraft, GitLabInstance, GitLabProject, ImportPreset, ImportProtection } from "../../models";
 import type { ParsedEnvVar } from "../../utils/envParser";
 import { useEnvVars } from "../../hooks/useEnvVars";
+import { ALL_SCOPES } from "../../utils/scopeFilter";
 import { readEnvFromClipboard, parseEnvFromPaste } from "../../utils/clipboardDetector";
 import { useToast } from "../ui/ToastContext";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
@@ -11,6 +12,7 @@ import { ImportOptionsDialog } from "../ui/ImportOptionsDialog";
 import { EnvVarToolbar } from "../env-vars/EnvVarToolbar";
 import { EnvVarTable } from "../env-vars/EnvVarTable";
 import { EnvVarFileImport } from "../env-vars/EnvVarFileImport";
+import { EnvVarBase64Import } from "../env-vars/EnvVarBase64Import";
 import "./EnvironmentVarsView.css";
 
 interface EnvironmentVarsViewProps {
@@ -87,6 +89,13 @@ export function EnvironmentVarsView({ instances, projects }: EnvironmentVarsView
     setPendingImport({ parsed, source: "file" });
   }
 
+  function handleBase64Add(draft: Base64RowDraft) {
+    envVars.addBase64Row(draft);
+    showToast(t("base64_added", { key: draft.key }), "success");
+    // Back to the table so the new row is visible straight away
+    envVars.setInputMode("manual");
+  }
+
   function handleImportConfirm(preset: ImportPreset, environmentScope: string) {
     if (!pendingImport) return;
     const protection = presetToProtection(preset);
@@ -96,7 +105,12 @@ export function EnvironmentVarsView({ instances, projects }: EnvironmentVarsView
   }
 
   async function handleSave() {
-    if (!envVars.validateRows()) return;
+    const wasFiltered = envVars.scopeFilter !== ALL_SCOPES;
+    if (!envVars.validateRows()) {
+      // validateRows clears the filter so the offending rows are reachable
+      if (wasFiltered) showToast(t("filter_reset_on_error"), "warning");
+      return;
+    }
     if (!selectedInstanceId || !selectedProjectId) return;
 
     const result = await envVars.saveAllChanges(selectedInstanceId, selectedProjectId);
@@ -163,6 +177,10 @@ export function EnvironmentVarsView({ instances, projects }: EnvironmentVarsView
             setInputMode={envVars.setInputMode}
             isSaving={envVars.isSaving}
             hasUnsavedChanges={envVars.hasUnsavedChanges}
+            scopeFilter={envVars.scopeFilter}
+            setScopeFilter={envVars.setScopeFilter}
+            availableScopes={envVars.availableScopes}
+            countsByScope={envVars.countsByScope}
             onAddRow={envVars.addEmptyRow}
             onPasteClipboard={handlePasteClipboard}
             onSave={handleSave}
@@ -173,13 +191,21 @@ export function EnvironmentVarsView({ instances, projects }: EnvironmentVarsView
             <EnvVarFileImport onImport={handleFileImport} />
           )}
 
+          {envVars.inputMode === "base64" && (
+            <EnvVarBase64Import defaultScope={envVars.defaultScope} onAdd={handleBase64Add} />
+          )}
+
           {envVars.isLoading ? (
             <div className="envvar-loading">
               <LoadingSpinner size={32} message={t("loading_variables")} />
             </div>
           ) : (
             <EnvVarTable
-              rows={envVars.rows}
+              rows={envVars.visibleRows}
+              maskedServerKeys={envVars.maskedServerKeys}
+              hiddenStats={envVars.hiddenStats}
+              scopeFilter={envVars.scopeFilter}
+              onClearFilter={() => envVars.setScopeFilter(ALL_SCOPES)}
               onUpdate={envVars.updateRowField}
               onDelete={envVars.markRowDeleted}
               onUndoEdit={envVars.undoRowEdit}
@@ -192,6 +218,7 @@ export function EnvironmentVarsView({ instances, projects }: EnvironmentVarsView
       {pendingImport && (
         <ImportOptionsDialog
           count={pendingImport.parsed.length}
+          defaultScope={envVars.defaultScope}
           onSelect={handleImportConfirm}
           onCancel={() => setPendingImport(null)}
         />

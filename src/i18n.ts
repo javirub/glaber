@@ -74,6 +74,36 @@ const resources = {
             // Environment Variables - Toolbar
             "manual_mode": "Manual",
             "file_mode": "File Import",
+            "base64_mode": "File → Base64",
+
+            // Environment Variables - Scope Filter
+            "filter_by_scope": "Filter by environment",
+            "scope_filter_all": "All environments",
+            "scope_filter_option": "{{scope}} ({{count}})",
+            "hidden_rows_banner": "The environment filter is hiding {{count}} variables.",
+            "hidden_rows_unsaved": "{{count}} of them have unsaved changes.",
+            "hidden_rows_invalid": "{{count}} of them have errors.",
+            "show_all_scopes": "Show all",
+            "filter_reset_on_error": "The environment filter was cleared so you can see the rows with errors.",
+            "no_variables_for_scope": "No variables for this environment.",
+
+            // Environment Variables - Base64 Import
+            "select_binary_file": "Select any file to encode as Base64",
+            "base64_preview_title": "Base64 Preview",
+            "base64_file_size": "File size",
+            "base64_encoded_length": "Encoded length",
+            "base64_chars": "{{count}} characters",
+            "base64_var_key": "Variable key",
+            "base64_scope_hint": "Created for {{scope}}",
+            "base64_type_env_var_desc": "Plain value; decode it in your job with base64 -d.",
+            "base64_type_file_desc": "GitLab writes the value to a temporary file and exposes its path.",
+            "base64_add_row": "Add as variable",
+            "base64_description": "Base64 of {{file}} ({{size}})",
+            "base64_size_warning": "The encoded value is {{count}} characters, close to GitLab's {{max}} character limit.",
+            "base64_too_large": "The encoded value exceeds GitLab's {{max}} character limit for variable values.",
+            "base64_masked_warning": "GitLab may refuse to mask this value: masked values must be a single line of at least 8 Base64 characters, and padding ('=') is often rejected.",
+            "base64_read_failed": "Could not read the file: {{error}}",
+            "base64_added": "Added '{{key}}' from the selected file.",
             "add_row": "Add Row",
             "paste_clipboard": "Paste from Clipboard",
             "save_changes": "Save Changes",
@@ -142,6 +172,7 @@ const resources = {
 
             // Environment Variables - Validation
             "key_required": "Key is required",
+            "value_too_long": "Value exceeds GitLab's 10000 character limit.",
             "masked_min_length_warning": "Masked variables must have values of at least 8 characters.",
 
             // Environment Variables - Warnings
@@ -229,6 +260,36 @@ const resources = {
             // Environment Variables - Toolbar
             "manual_mode": "Manual",
             "file_mode": "Importar Archivo",
+            "base64_mode": "Archivo → Base64",
+
+            // Environment Variables - Scope Filter
+            "filter_by_scope": "Filtrar por entorno",
+            "scope_filter_all": "Todos los entornos",
+            "scope_filter_option": "{{scope}} ({{count}})",
+            "hidden_rows_banner": "El filtro de entorno oculta {{count}} variables.",
+            "hidden_rows_unsaved": "{{count}} de ellas tienen cambios sin guardar.",
+            "hidden_rows_invalid": "{{count}} de ellas tienen errores.",
+            "show_all_scopes": "Mostrar todas",
+            "filter_reset_on_error": "Se ha quitado el filtro de entorno para que veas las filas con errores.",
+            "no_variables_for_scope": "No hay variables para este entorno.",
+
+            // Environment Variables - Base64 Import
+            "select_binary_file": "Selecciona cualquier archivo para codificarlo en Base64",
+            "base64_preview_title": "Vista previa Base64",
+            "base64_file_size": "Tamaño del archivo",
+            "base64_encoded_length": "Longitud codificada",
+            "base64_chars": "{{count}} caracteres",
+            "base64_var_key": "Clave de la variable",
+            "base64_scope_hint": "Se creará para {{scope}}",
+            "base64_type_env_var_desc": "Valor plano; decodifícalo en el job con base64 -d.",
+            "base64_type_file_desc": "GitLab escribe el valor en un archivo temporal y expone su ruta.",
+            "base64_add_row": "Añadir como variable",
+            "base64_description": "Base64 de {{file}} ({{size}})",
+            "base64_size_warning": "El valor codificado tiene {{count}} caracteres, cerca del límite de {{max}} de GitLab.",
+            "base64_too_large": "El valor codificado supera el límite de {{max}} caracteres de GitLab para el valor de una variable.",
+            "base64_masked_warning": "GitLab puede rechazar el enmascarado: debe ser una sola línea de al menos 8 caracteres Base64, y el relleno ('=') suele rechazarse.",
+            "base64_read_failed": "No se pudo leer el archivo: {{error}}",
+            "base64_added": "Añadida '{{key}}' a partir del archivo seleccionado.",
             "add_row": "Añadir Fila",
             "paste_clipboard": "Pegar del Portapapeles",
             "save_changes": "Guardar Cambios",
@@ -297,6 +358,7 @@ const resources = {
 
             // Environment Variables - Validation
             "key_required": "La clave es obligatoria",
+            "value_too_long": "El valor supera el límite de 10000 caracteres de GitLab.",
             "masked_min_length_warning": "Las variables enmascaradas deben tener valores de al menos 8 caracteres.",
 
             // Environment Variables - Warnings

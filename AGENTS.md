@@ -28,6 +28,7 @@ src/
     env-vars/EnvVarRow.tsx   - Single editable row
     env-vars/EnvVarToolbar.tsx - Mode toggle + action buttons
     env-vars/EnvVarFileImport.tsx - File picker + preview
+    env-vars/EnvVarBase64Import.tsx - Any file -> Base64 variable
     env-vars/EnvVarConflictWarning.tsx - Masked var warning
   hooks/
     useStore.ts           - Wraps LazyStore
@@ -37,11 +38,15 @@ src/
   utils/
     envParser.ts          - KEY=VALUE text parser
     clipboardDetector.ts  - Clipboard env var detection
+    scopeFilter.ts        - environment_scope filtering helpers
+    varKey.ts             - file name -> GitLab variable key
+    gitlabLimits.ts       - value length / masking constraints
 
 src-tauri/src/
-  models.rs  - Rust structs (GitLabVariable, Create/Update/DeleteParams)
+  models.rs  - Rust structs (GitLabVariable, Create/Update/DeleteParams, FileBase64)
   gitlab.rs  - GitLabClient with list/create/update/delete_variable methods
-  lib.rs     - get_client helper + 6 Tauri commands
+  fs_util.rs - encode_file_base64 (local file -> Base64)
+  lib.rs     - get_client helper + 7 Tauri commands
 ```
 
 ## Build Commands
@@ -54,4 +59,7 @@ src-tauri/src/
 - Toast notifications via `useToast()` from `ToastContext`
 - All views wrapped in `.view-enter` for fade-in animation
 - Env var masked update: always uses delete + recreate (no in-place update for masked vars)
+- Scope filter is display-only: validateRows/saveAllChanges always iterate the full `rows`
+- Pagination never assumes the server honoured `per_page`; see `get_all_pages` in gitlab.rs
+- GitLab caps a variable value at 10 000 characters (~7.5 KB of file before Base64)
 - CSS: per-component files, global vars in App.css

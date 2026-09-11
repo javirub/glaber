@@ -1,13 +1,19 @@
-import { Plus, ClipboardPaste, Save, RefreshCw } from "lucide-react";
+import { Plus, ClipboardPaste, Save, RefreshCw, Filter } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import type { EnvVarInputMode } from "../../models";
+import { ALL_SCOPES } from "../../utils/scopeFilter";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 import "./EnvVarToolbar.css";
 
 interface EnvVarToolbarProps {
-  inputMode: "manual" | "file";
-  setInputMode: (mode: "manual" | "file") => void;
+  inputMode: EnvVarInputMode;
+  setInputMode: (mode: EnvVarInputMode) => void;
   isSaving: boolean;
   hasUnsavedChanges: boolean;
+  scopeFilter: string;
+  setScopeFilter: (scope: string) => void;
+  availableScopes: string[];
+  countsByScope: Map<string, number>;
   onAddRow: () => void;
   onPasteClipboard: () => void;
   onSave: () => void;
@@ -17,6 +23,7 @@ interface EnvVarToolbarProps {
 export function EnvVarToolbar({
   inputMode, setInputMode,
   isSaving, hasUnsavedChanges,
+  scopeFilter, setScopeFilter, availableScopes, countsByScope,
   onAddRow, onPasteClipboard, onSave, onRefresh,
 }: EnvVarToolbarProps) {
   const { t } = useTranslation();
@@ -38,7 +45,33 @@ export function EnvVarToolbar({
         >
           {t("file_mode")}
         </button>
+        <button
+          className={`envvar-tab ${inputMode === "base64" ? "envvar-tab-active" : ""}`}
+          onClick={() => setInputMode("base64")}
+          type="button"
+        >
+          {t("base64_mode")}
+        </button>
       </div>
+
+      {availableScopes.length > 1 && (
+        <div className="envvar-toolbar-filter">
+          <Filter size={14} />
+          <select
+            className="envvar-scope-filter"
+            value={scopeFilter}
+            onChange={e => setScopeFilter(e.target.value)}
+            aria-label={t("filter_by_scope")}
+          >
+            <option value={ALL_SCOPES}>{t("scope_filter_all")}</option>
+            {availableScopes.map(scope => (
+              <option key={scope} value={scope}>
+                {t("scope_filter_option", { scope, count: countsByScope.get(scope) ?? 0 })}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="envvar-toolbar-actions">
         {inputMode === "manual" && (

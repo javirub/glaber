@@ -73,3 +73,11 @@ pub struct DeleteVariableParams {
     pub key: String,
     pub environment_scope: String,
 }
+
+/// A local file encoded for use as a CI/CD variable value.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FileBase64 {
+    pub file_name: String,
+    pub byte_size: u64,
+    pub base64: String,
+}

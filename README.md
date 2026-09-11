@@ -17,6 +17,8 @@ A powerful and intuitive desktop application built with **Tauri**, **Rust**, and
 - **Masked Variable Support**: Automatic delete + recreate fallback when updating masked variables. Enforces GitLab's 8-character minimum for masked values with inline validation warnings.
 - **Clipboard Import**: Paste environment variables from the clipboard (Ctrl+V or toolbar button). Duplicate keys are merged into existing rows (marked as edited with undo enabled) instead of creating duplicates.
 - **File Import**: Import variables from `.env`, `.txt`, `.yml`, `.conf`, or `.properties` files with preview before applying.
+- **Base64 File Variables**: Turn any file (certificate, keystore, kubeconfig) into a variable encoded in Base64, choosing between `env_var` and `file` types. Warns before GitLab's 10 000 character value limit.
+- **Environment Filter**: Filter the table by `environment_scope`. Filtering is display-only — hidden rows are still validated and saved, and a banner reports how many are hidden.
 - **Duplicate & Validation Checks**: Detects duplicate keys, missing keys, and masked value length issues before saving.
 - **Structured Error Reporting**: Save errors are displayed with localized messages per variable.
 

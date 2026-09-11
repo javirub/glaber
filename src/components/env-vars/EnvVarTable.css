@@ -174,3 +174,46 @@
   color: var(--text-secondary);
   padding: 40px 0;
 }
+
+.envvar-filter-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--text-secondary);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.envvar-filter-banner-unsaved {
+  border-left-color: var(--accent-yellow);
+  background: rgba(251, 191, 36, 0.04);
+}
+
+.envvar-filter-banner-invalid {
+  border-left-color: var(--accent-red);
+  background: rgba(248, 113, 113, 0.04);
+}
+
+.envvar-filter-banner-btn {
+  margin-left: auto;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.envvar-filter-banner-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: none;
+  filter: none;
+  box-shadow: none;
+}

@@ -1,7 +1,8 @@
 mod models;
 mod gitlab;
+mod fs_util;
 
-use models::{GitLabInstance, PackageUploadParams, CreateVariableParams, UpdateVariableParams, DeleteVariableParams, GitLabVariable};
+use models::{GitLabInstance, PackageUploadParams, CreateVariableParams, UpdateVariableParams, DeleteVariableParams, GitLabVariable, FileBase64};
 use gitlab::GitLabClient;
 use tauri_plugin_store::StoreExt;
 
@@ -114,6 +115,18 @@ async fn delete_variable(
     }).await.map_err(|e| format!("Task failed: {}", e))?
 }
 
+/// Encode a local file as Base64 so it can be stored as a CI/CD variable.
+///
+/// Unlike the other commands this one talks to no instance: it is plain local
+/// IO, kept in Rust so reading binaries does not depend on the frontend's
+/// filesystem scope and does not cross the IPC boundary as raw bytes.
+#[tauri::command]
+async fn read_file_base64(path: String) -> Result<FileBase64, String> {
+    tokio::task::spawn_blocking(move || {
+        fs_util::encode_file_base64(std::path::Path::new(&path))
+    }).await.map_err(|e| format!("Task failed: {}", e))?
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -133,6 +146,7 @@ pub fn run() {
             create_variable,
             update_variable,
             delete_variable,
+            read_file_base64,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
